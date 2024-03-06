@@ -1,7 +1,11 @@
 ## Ambiente Virtual
 - explicação: https://www.alura.com.br/artigos/ambientes-virtuais-em-python
 - documentação: https://docs.python.org/3/library/venv.html
-
+- Passo a passo no Windows:
+    - python -m venv venv --> criando a venv
+    - ./venv/Scripts/activate --> ativando a venv
+    - deactivate --> desativar a venv e voltar pro sistema operacional
+      
 ## Utilizando o git
 - Principais comandos:
   - git init  VS rm -rf .git
@@ -15,7 +19,7 @@
   - git checkout -b <nome-da-nova-branch> (cria uma nova branch e muda para ela)
 
 - Link para acessar mais comandos (é o repositótio de um amigo): https://github.com/burgues0/git-cheatsheet
-- 
+- Arquivos que podem ajudar no entendimento do git serão colocados no repositório
 
 - *solving problems*
   - 1- erro -fatal: refusing to merge unrelated histories- geralmente acontece quando você tenta fazer o git pull de um repositório remoto, mas o seu repositório local possuí um histórico de commits, branches, etc, diferente do que está no repositório remoto.
