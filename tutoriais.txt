@@ -1,6 +1,6 @@
 *Well Log Formats*
+https://www.youtube.com/watch?v=8U4gxMJybJs
 
-https://www.youtube.com/watch?v=j7KUvKD88AM
 
 Biblioteca Pandas:
 https://www.youtube.com/watch?v=C0aj3FjN5e0
