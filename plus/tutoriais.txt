@@ -2,5 +2,8 @@
 https://www.youtube.com/watch?v=8U4gxMJybJs
 
 
-Biblioteca Pandas:
+*Biblioteca Pandas*
 https://www.youtube.com/watch?v=C0aj3FjN5e0
+
+*Biblioteca Openpyxl*
+https://www.youtube.com/watch?v=IT7zPluDADk&t=303s

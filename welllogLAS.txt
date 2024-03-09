@@ -1,3 +1,0 @@
-*Entendimenro do formato de arquivo*
-- ~ --> separa as seções do arquivo
-- version section: contains the number of the last version / wrap: todos os dados em uma linha 
