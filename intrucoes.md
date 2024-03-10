@@ -41,5 +41,5 @@
 - Arquivos que podem ajudar no entendimento do git serão colocados no repositório
 
 - *SOLVING PROBLEMS*
-  - 1- erro -fatal: refusing to merge unrelated histories- geralmente acontece quando você tenta fazer o git pull de um repositório remoto, mas o seu repositório local possuí um histórico de commits, branches, etc, diferente do que está no repositório remoto.
-     - Solução 1: git pull origin branch --allow-unrelated-histories
+  - **"fatal: refusing to merge unrelated histories"** --> geralmente acontece quando você tenta fazer o git pull de um repositório remoto, mas o seu repositório local possuí um histórico de commits, branches, etc, diferente do que está no repositório remoto.
+     - **Solução 1: git pull origin branch --allow-unrelated-histories**
