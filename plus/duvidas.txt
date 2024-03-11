@@ -11,7 +11,7 @@ LAS Well Log Format
 - O que é ASCII | CURVE sections?
 - Acima dos "-" são os nomes das colunas
 - É uma arquivo por poço?
-- todo da mesma linhas está associado?
+- tudo da mesma linhas está associado?
 
 Single Well Log File:
 - a cada linha vazia, tem um poço
