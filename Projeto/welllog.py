@@ -1,5 +1,5 @@
 import pandas as pd
-
+# OLAOLAOAAOJASKJVGCDYKSFEW
 
 arq = open("docs/EXEMPLO1.wlg", "r") # ALTERAR O ARQUIVO!
 
