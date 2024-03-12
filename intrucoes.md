@@ -2,7 +2,7 @@
 - explicação: https://www.alura.com.br/artigos/ambientes-virtuais-em-python
 - documentação: https://docs.python.org/3/library/venv.html
 - Passo a passo no Windows pelo cmd:
-    - python -m venv venv --> criando a venv
+    - python -m venv venv --> criando a venv a
     - ./venv/Scripts/activate --> ativando a venv
     - deactivate --> desativar a venv e voltar pro sistema operacional
       
