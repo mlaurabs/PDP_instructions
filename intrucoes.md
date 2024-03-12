@@ -13,7 +13,7 @@
   - **rm -rf .git** (apaga o arquivo .git)
   - **git add .** (envia para "stage" todas as modificações feitas no repositório. arquivos "staged" --> pronto para envio)
   - **git commit -m "message"** (esse comando vai criar um comit dos arquivos que estão marcados como staged)
-  - **git add remote <"conexão" do repositório> <link "http" do repositório>** (configura o acesso a um repositório no GitHub)
+  - **git  remote add <"conexão" do repositório> <link "http" do repositório>** (configura o acesso a um repositório no GitHub)
   - **git push <"conexão" do repositório> <nome-da-branch>**  (envia as atualizações)
   - **git push -f <"conexão" do repositório> <nome-da-branch>** (ignora o que está no repositório remoto) #cuidade com esse comando, pode perder algo importante ja carregado no github)
   - **git pull origin branch** (carrega no seu repositório local as atualizações do Github)
