@@ -1,0 +1,19 @@
+Dúvidas?
+- well log é o poço?
+
+Single Well Log File:
+- primeira linha é o nome do poço]
+- -999.0 --> nulo
+- cada linha é uma data? variam no tempo?
+
+LAS Well Log Format
+- cada tag é uma tabela
+- O que é ASCII | CURVE sections?
+- Acima dos "-" são os nomes das colunas
+- É uma arquivo por poço?
+- tudo da mesma linhas está associado?
+
+Single Well Log File:
+- a cada linha vazia, tem um poço
+- o que é LOGUNITS?
+
