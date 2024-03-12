@@ -1,83 +1,51 @@
-"""
-Outra versão de definir as colunas em teste :
-file = open(path, "r")
-    linha = file.readline().rstrip() #tira o \n
-    coluna = 0 # contabiliza colunas
-    pos_ini = 0
-    aux = 0 # variavel auxiliar que contabiliza aspas
-    j = 0 # iterador para fatiar a string
-    for i in range(len(linha)):
-        var = linha[i]
-        if(linha[i] == " " and linha[i-1] != " "): #verifica se já passamos por uma coluna
-            col_name = linha[pos_ini:pos_ini+j]
-            if("'" not in col_name):
-                coluna +=1
-                pos_ini = i+1
-                j = 0
-        if(linha[i] == "'"): # começa a ler uma coluna entre aspas
-                j = 0
-                aux +=1
-        if(aux == 2): # já terminou de ler uma coluna entre aspas
-            aux = 0
-            coluna +=1
-            j = 0
-        j +=1        
-    return coluna
+#Métodos para leitura do Single e Mutiple Welllog
 
-
-"""
-
-def countCols(path): #DONE
+def read(path):
     file = open(path, "r")
-    linha = file.readline().rstrip() #tira o \n
+    return file
+
+def countProperties(path): #DONE
+    # como as colunas sempre aparecem na primeira linha, pegamos direto ela
+    file = read(path)
+    linha = file.readline().rstrip() + " " #tira o \n e adiciona um espaço ao final
     coluna = 0
-    aux = 0
-    opcoes = [" ", "'"] 
+    aux = 0 # conta as aspas
+    space = [" ", "\t"]
     for i in range(len(linha)):
-        if(linha[i] == " " and linha[i-1] not in opcoes): #verifica se já passamos por uma coluna
-            coluna +=1
+        if(linha[i] in space and linha[i-1] != " "): #verifica se já passamos por uma coluna (estamos entre colunas, ou seja, em um "espaço")
+            if(aux == 0 or aux == 2): # se acabou de ler uma coluna com ou sem aspas
+                coluna +=1
         elif(linha[i] == "'"): # começa a ler uma coluna entre aspas
-            if(aux != 2): # lendo uma aspa
-                aux +=1
-        if(aux == 2): # já terminou de ler uma coluna entre aspas
-            aux = 0
-            coluna +=1
-        
+            if(aux == 2): # se leu a última aspa
+                aux = 0
+            aux +=1
     return coluna
     
-
-def getDataItems(path): # ajeitar no formato de cima --> mesma coisa mas com o col_name
-    file = open(path, "r")
-    linha = file.readline().rstrip() #tira o \n
-    data_items = []
+def getProperties(path): # ajeitar no formato de cima --> mesma coisa mas com o col_name
+    file = read(path)
+    linha = file.readline().rstrip() + " " #tira o \n e adiciona um espaço ao final
+    properties = []
     aux = 0
     col = ""
-
+    space = [" ", "\t"]
     for i in range(len(linha)):
-        if(linha[i] == " " and linha[i+1] != " " and linha[i-1] != "'"): #verifica se já passamos por uma coluna
-           if(aux == 0): #se estamos fora de "aspas", ou seja, terminamos de ler uma coluna que não está entre aspas
-                data_items.append(col.strip())
+        if(linha[i] in space and linha[i-1] != " "): #verifica se já passamos por uma coluna (estamos entre colunas, ou seja, em um "espaço")
+            if(aux == 0 or aux == 2): # se acabou de ler uma coluna com ou sem aspas
+                properties.append(col.strip())
                 col = ""
-           else:
-               col += linha[i]
+            else:
+                col += " "
         elif(linha[i] == "'"): # começa a ler uma coluna entre aspas
-            if(aux != 2): # lendo a última aspa
-                aux +=1
-        else:            
+            if(aux == 2): # se leu a última aspa
+                aux = 0
+            aux +=1
+        else:
             col += linha[i]
-        if(aux == 2): # já terminou de ler uma coluna entre aspas
-            aux = 0
-            data_items.append(col.strip())
-            col = ""
-    print(data_items)
+    return properties
 
 
-
-
-# DEPTH np 'Production e ola'
-#string = "DEPTH NP"
-print(countCols("modelo.wlg"))
-#getDataItems("modelo.wlg")
+print(countProperties("modelo.wlg"))
+print(getProperties("RFT_mod_netto.wlg"))
     
 
 

@@ -1,4 +1,4 @@
-DEPTH TVDSS 'Pressure'  
+DEPTH    DEPTH2 'Water Rate RC' 'Oil Rate RC' 'Gas Rate RC' Production
 LOGUNITS 'm' 'kgf/cm2'
 'RCB-0001' 19820407
 1926.0 159.9
