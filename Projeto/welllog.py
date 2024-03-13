@@ -1,7 +1,7 @@
 import pandas as pd
 # OLAOLAOAAOJASKJVGCDYKSFEW
 
-arq = open("docs/EXEMPLO1.wlg", "r") # ALTERAR O ARQUIVO!
+arq = open("Projeto/modelo.wlg", "r") # ALTERAR O ARQUIVO!
 
 def organiza(arq):
 
@@ -36,6 +36,7 @@ def organiza(arq):
                 num += 1
     qtd.pop(0)                                        #remove o numero 0
     qtd.append(num)
+
 
     j = 0
     for n, item in enumerate(qtd):                       #começa a organizar as listas

@@ -76,7 +76,7 @@ def getDataItems(path): # ajeitar no formato de cima --> mesma coisa mas com o c
 
 # DEPTH np 'Production e ola'
 #string = "DEPTH NP"
-print(countCols("modelo.wlg"))
+print(countCols("Projeto/modelo.wlg"))
 #getDataItems("modelo.wlg")
     
 
