@@ -44,8 +44,8 @@ def getProperties(path): # ajeitar no formato de cima --> mesma coisa mas com o 
     return properties
 
 
-print(countProperties("modelo.wlg"))
-print(getProperties("RFT_mod_netto.wlg"))
+#print(countProperties("Projeto/modelo.wlg"))
+#print(getProperties("Projeto/modelo.wlg"))
     
 
 

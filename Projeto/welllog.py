@@ -1,27 +1,19 @@
 import pandas as pd
-arq = open("RFT_mod_netto.wlg", "r") # ALTERAR O ARQUIVO!
-
-def organiza(arq):
+from single import countProperties, getProperties, read
 
 
-    titulos = []
-    cont = 0
-    for i in range(2):                                   #separa os dois primeiros topicos de colunas e 
-        titulos.append(arq.readline().strip().split())   #logunits(só para organizar a outra parte do codigo)
-        print(titulos)
-    cont = len(titulos[0])
+ # ALTERAR O ARQUIVO!
 
+def organiza(arq, colunas):
 
-
-
-
+    file = read(arq)
     l=[]                            #lista onde vão ficar todos valores de cada coluna 
     dWlg = dict()                   
     nomeEdata = []                  #lista que pega os nomes e as datas
     num = 0                         #contagem de valores que tem em um unico poço
     qtd = []                        #lista com as contagens acima
 
-    for linha in arq:
+    for linha in file:
         linha = linha.strip().split()
         if linha != []:             #verifica se tem espaços vazios dentro do arquivo
             if linha[0][0] == '"' or linha[0][0] == "'":   #verifica se a linha é o nome e a data
@@ -29,7 +21,7 @@ def organiza(arq):
                 qtd.append(num)
                 num = 0
             else:
-                if len(linha) == cont:                     #verifica se a quantidade de indices é igual as colunas
+                if len(linha) == colunas:                     #verifica se a quantidade de indices é igual as colunas
                     l.append(linha)
                 num += 1
     qtd.pop(0)                                        #remove o numero 0
@@ -53,7 +45,12 @@ def organiza(arq):
 
 
 
-organiza(arq)
+
+arq = "Projeto/RFT_mod_netto.wlg"
+
+colu = countProperties(arq)
+getProperties(arq)
+organiza(arq, colu)
 
 
 
