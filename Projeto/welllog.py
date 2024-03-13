@@ -1,7 +1,5 @@
 import pandas as pd
-# OLAOLAOAAOJASKJVGCDYKSFEW
-
-arq = open("Projeto/modelo.wlg", "r") # ALTERAR O ARQUIVO!
+arq = open("RFT_mod_netto.wlg", "r") # ALTERAR O ARQUIVO!
 
 def organiza(arq):
 
