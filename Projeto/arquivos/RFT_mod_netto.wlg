@@ -1,4 +1,4 @@
-DEPTH 'AcumTest' 'Pressure'     
+DEPTH 'AcumTest' 'Pressure'
 LOGUNITS 'm' 'Mm3' 'kPa'
 "IWAG-A-B252"	20000101
 	
