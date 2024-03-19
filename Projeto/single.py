@@ -1,8 +1,27 @@
 #Métodos para leitura do Single Welllog
+import pandas as pd
+
+# logunits deve ser incluído no DateFrame?
+# o wellcount e wellnames é necessário? pq o single contém apenas 1 poço por arquivo
+
 
 def read(path):
     file = open(path, "r")
     return file
+
+def onlyNumbers(row):
+    numeros = -1
+    space = ["\t", "\n"]
+
+    for i in range(len(row)):
+        if(row[i] in space):
+            continue
+        if(not (ord(row[i]) >= 48 and  ord(row[i]) <= 57)): # verfica se é um número
+            numeros = 0
+        if(numeros == 0):
+            return False
+        else:
+            return True
 
 def empty(row): #verifica de uma linha é vazia
     letras = -1
@@ -68,6 +87,46 @@ def getPropNames(path):
 def getWellPropCount(path):
     propNames = getPropNames(path)
     return len(propNames)
-    
-print(getPropNames("arquivos/2_singlewelllogwithnullvalue.log"))
-print(getWellPropCount("arquivos/2_singlewelllogwithnullvalue.log"))
+
+def getWellName(path):
+    file = read(path)
+    linha = file.readline().rstrip() # tira o "\n"
+    dados = linha.split() 
+    return dados[0]
+
+def organizeData(lista, colunas, n_cols): # organiza os dados de acordo com as propriedades do documento
+    # lista são os dados de um determindado well
+    # colunas são as proriedades listadas no arquivo
+    # n_cols é o número de propriedades listadas no arquivo
+    data = dict()
+    j = 0
+    while(j < n_cols): # para cada coluna
+        key = colunas[j] # atribui key do dicionario o nome da coluna
+        valor = [] # cria uma lista para reorganizar os dados de acordo com sua coluna
+        for item in lista: # percorre a lista (cada item é uma linha)
+            valor.append(item[j]) #pega o valor da linha respectivo a coluna
+            data[key] = valor # atribui os dados organizados a sua respectiva coluna
+        j +=1
+    return data
+
+def getWellPropData(path):
+    file = read(path)
+    colunas = getPropNames(path)
+    n_cols = getWellPropCount(path)
+    well_name = getWellName(path)
+    dados = []
+
+    for linha in file:
+        linha = linha.rstrip() # tira o "\n"
+        if(not empty(linha) and onlyNumbers(linha)):
+            dados.append(linha.split())
+
+    prop_data = dict()
+    prop_data[well_name] = pd.DataFrame(organizeData(dados, colunas, n_cols))
+
+    return prop_data[well_name]
+
+# wellproptype - TO DO    
+
+# print(getWellName("arquivos/2_singlewelllogwithnullvalue.log"))
+# getWellPropData("arquivos/2_singlewelllogwithnullvalue.log")
