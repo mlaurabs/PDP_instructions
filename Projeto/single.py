@@ -4,12 +4,11 @@ import pandas as pd
 # logunits deve ser incluído no DateFrame?
 # o wellcount e wellnames é necessário? pq o single contém apenas 1 poço por arquivo
 
-
 def read(path):
     file = open(path, "r")
     return file
 
-def onlyNumbers(row):
+def onlyNumbers(row): # verifica se uma string contém apenas números - bool
     numeros = -1
     space = ["\t", "\n"]
 
@@ -23,7 +22,7 @@ def onlyNumbers(row):
         else:
             return True
 
-def empty(row): #verifica de uma linha é vazia
+def empty(row): # verifica se uma linha está vazia - bool
     letras = -1
     numeros = -1
     for i in range(len(row)):
@@ -58,11 +57,7 @@ def getColumns(linha): # identifica e retorna o nome das colunas
             col += linha[i]
     return properties
 
-def getPropNames(path):
-    # TThe first line is the well name and an optional date and/or null value. 
-    # The next line may optionally contain log units which must be input using the keyword LOGUNITS
-    # The next line contains the log names (column headings). 
-    
+def getPropNames(path): # retirna o nome das propriedades - array
     file = read(path)
     cont = 1 # contador de linhas
     logunits = -1 # variavel auxiliar para identificar se já a leitura dos dados dos poços já se inciou
@@ -84,11 +79,11 @@ def getPropNames(path):
     
     return propNames
 
-def getWellPropCount(path):
+def getWellPropCount(path): # retorna a quantidade de propriedades - int
     propNames = getPropNames(path)
     return len(propNames)
 
-def getWellName(path):
+def getWellName(path): # retorna o nome do poço
     file = read(path)
     linha = file.readline().rstrip() # tira o "\n"
     dados = linha.split() 
@@ -109,7 +104,7 @@ def organizeData(lista, colunas, n_cols): # organiza os dados de acordo com as p
         j +=1
     return data
 
-def getWellPropData(path):
+def getWellPropData(path): # retorna um dataframe dos dados do poço
     file = read(path)
     colunas = getPropNames(path)
     n_cols = getWellPropCount(path)

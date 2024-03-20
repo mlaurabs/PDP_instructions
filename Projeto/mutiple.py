@@ -8,7 +8,7 @@ def read(path):
     file = open(path, "r")
     return file
 
-#ideia: teria a opção de simplesmente retornar o lengh da lista com o nome das propriedades
+#ideia: teria a opção de simplesmente retornar o length da lista com o nome das propriedades
 def getWellPropCount(path): # retorna a quantidade de propriedade em um arquivo - int
     # como as colunas sempre aparecem na primeira linha, ela é acessada diretamente
     file = read(path)
@@ -64,7 +64,7 @@ def onlyNumbers(row): # verifica se uma string contém apenas números - bool
             return True
 
 def empty(row): #verifica se uma linha é vazia - bool
-    # um linha vazia na extensão .wlg é aquela que não contém letras ou números
+    # uma linha vazia na extensão .wlg é aquela que não contém letras ou números
     letras = -1
     numeros = -1
     for i in range(len(row)):
@@ -80,23 +80,23 @@ def empty(row): #verifica se uma linha é vazia - bool
         return True
         
 def getNameDateWell(row): # retorna uma lista com o nome e a data de um poço - array
-    # - the well name must be enclosed in single or double quotes
-
     aux = 0 # contador de aspas
     aspas = ["'", '"']
     name = ""
-    date = "" # formato a data?
+    date = "" # formatar a data?
     dados = []
     
+    #estrutura da linha: "well name" data
+
     for i in range(len(row)):
         if(row[i] in aspas):
             if(aux != 2):
                 aux +=1
-        elif(aux == 2):
+        elif(aux == 2): # já leu a data
             if(ord(row[i]) >= 48 and ord(row[i]) <= 57): # verfica se é um número
                 date += row[i]
         else:
-            if(aux == 1):
+            if(aux == 1): # ainda está lendo a data
                 name += row[i]
         
     dados.append(name)
@@ -105,7 +105,7 @@ def getNameDateWell(row): # retorna uma lista com o nome e a data de um poço - 
 
 def getWellNames(path): # retorna uma lista com os nomes dos poços de um arquivo - array
     file = read(path)
-    logunits = -1 # variavel auxiliar para identificar se já a leitura dos dados dos poços já se inciou
+    logunits = -1 
     unidades = "logunits"
     cont  = 1 # contador de linhas
     well_names = []
@@ -115,7 +115,7 @@ def getWellNames(path): # retorna uma lista com os nomes dos poços de um arquiv
             row = linha.lower()
             if(unidades in row): # verifica se a linha 2 é logunits (opcional nos documentos)
                 logunits = 0 # atribui valor zero caso seja logunits
-            else: # se não logunits lê o nome do poço
+            else: # se não é logunits, lê o nome do poço
                 poco_nome = getNameDateWell(linha)  
                 well_names.append(poco_nome[0])              
         elif(cont > 2): # se passou da linha 2
@@ -123,7 +123,7 @@ def getWellNames(path): # retorna uma lista com os nomes dos poços de um arquiv
                 poco_nome = getNameDateWell(linha)  
                 well_names.append(poco_nome[0])  
                 logunits = -1 # já passou pelo logunits            
-            elif(not empty(linha)): # se a linha não foi vazia
+            elif(not empty(linha)): # se a linha não é vazia
                 if(not onlyNumbers(linha)): # se a linha não tiver apenas números
                     poco_nome = getNameDateWell(linha)
                     well_names.append(poco_nome[0])   
@@ -137,7 +137,7 @@ def getWellCount_v1(path):
 
 def getWellCount(path): # retorna a quantidade de poços de um arquivo - int
     file = read(path)
-    logunits = -1 # variavel auxiliar para identificar se já a leitura dos dados dos poços já se inciou
+    logunits = -1 
     unidades = "logunits"
     cont  = 1 # contador de linhas
     countWells = 0
@@ -167,9 +167,9 @@ def organizeData(lista, colunas, n_cols): # organiza os dados de acordo com as p
     while(j < n_cols): 
         key = colunas[j] # atribui a key do dicionario o nome da coluna/propriedade
         valor = [] 
-        for item in lista: # percorre a lista onde cada item é uma linha)
+        for item in lista: # percorre a lista onde cada item é uma linha
             valor.append(item[j]) #pega o valor da linha na posiçao respectiva a coluna
-            data[key] = valor # atribui os dados organizados a sua respectiva coluna
+            data[key] = valor # atribui os dados organizados a sua respectiva coluna (key)
         j +=1
     return data
 
@@ -194,13 +194,13 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
                 well = well_names[i]
                 if(i < totalWells-1): # se ainda falta poço para ler
                     i += 1        
-            else: #leitura do primeiro poco
+            else: # iniciando leitura do primeiro poco
                 well = well_names[i]
                 i += 1
         elif(i <= totalWells): # se ainda falta poço para ler
             if(not empty(linha) and onlyNumbers(linha)): # verificando se estamos na linha que contém dados
                 dados.append(linha.split())
-        if(i == totalWells - 1): # se estamos na última linha de dado do último poço
+        if(i == totalWells - 1): # se estamos na última linha de dados do último poço
             data_per_well[well] = dados
   
     for key in data_per_well: # reorganiza os dados de cada well de acordo com suas propriedades
