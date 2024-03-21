@@ -22,6 +22,7 @@ def onlyNumbers(row): # verifica se uma string contém apenas números - bool
         else:
             return True
 
+# utlizar isalpha() isnumeric()
 def empty(row): # verifica se uma linha está vazia - bool
     letras = -1
     numeros = -1
@@ -37,26 +38,6 @@ def empty(row): # verifica se uma linha está vazia - bool
     else:
         return True
 
-def getColumns(linha): # identifica e retorna o nome das colunas
-    properties = []
-    aux = 0 # conta as aspas
-    col = ""
-    space = [" ", "\t"]
-    for i in range(len(linha)):
-        if(linha[i] in space and linha[i-1] != " "): #verifica se já passamos por uma coluna (estamos entre colunas, ou seja, em um "espaço")
-            if(aux == 0 or aux == 2): # se acabou de ler uma coluna com ou sem aspas
-                properties.append(col.strip())
-                col = ""
-            else:
-                col += " "
-        elif(linha[i] == "'"): # começa a ler uma coluna entre aspas
-            if(aux == 2): # se leu a última aspa
-                aux = 0
-            aux +=1
-        else:
-            col += linha[i]
-    return properties
-
 def getPropNames(path): # retirna o nome das propriedades - array
     file = read(path)
     cont = 1 # contador de linhas
@@ -69,11 +50,11 @@ def getPropNames(path): # retirna o nome das propriedades - array
         if(cont == 2 and not empty(linha)):
             row = linha.lower()
             if(unidades not in row): # verifica se a linha 2 é logunits (opcional nos documentos)
-                propNames = getColumns(linha)
+                propNames = linha.split()
                 break
         elif(cont > 2):
             if(not empty(linha)):
-                propNames = getColumns(linha)
+                propNames = linha.split()
                 break
         cont +=1
     
@@ -125,3 +106,29 @@ def getWellPropData(path): # retorna um dataframe dos dados do poço
 
 # print(getWellName("arquivos/2_singlewelllogwithnullvalue.log"))
 # getWellPropData("arquivos/2_singlewelllogwithnullvalue.log")
+print(getPropNames("arquivos/2_singlewelllogwithnullvalue.log"))
+
+"""
+funções não sendo utilizadas:
+
+def getColumns(linha): # identifica e retorna o nome das colunas
+    properties = []
+    aux = 0 # conta as aspas
+    col = ""
+    space = [" ", "\t"]
+    for i in range(len(linha)):
+        if(linha[i] in space and linha[i-1] != " "): #verifica se já passamos por uma coluna (estamos entre colunas, ou seja, em um "espaço")
+            if(aux == 0 or aux == 2): # se acabou de ler uma coluna com ou sem aspas
+                properties.append(col.strip())
+                col = ""
+            else:
+                col += " "
+        elif(linha[i] == "'"): # começa a ler uma coluna entre aspas
+            if(aux == 2): # se leu a última aspa
+                aux = 0
+            aux +=1
+        else:
+            col += linha[i]
+    return properties
+
+"""
