@@ -151,7 +151,6 @@ def getWellNames(path):
     well_names = []
     poco_nome = []
     linha_anterior = ""
-
     cont = 1
     i = 0
     aux = 0
