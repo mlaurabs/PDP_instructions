@@ -1,5 +1,4 @@
 #Métodos para leitura do FHF
-
 # linhas que começam "*" são comentários
 
 def read(path):
@@ -8,12 +7,13 @@ def read(path):
 
 def onlyNumbers(row): # verifica se uma string contém apenas números - bool
     numeros = -1
-    space = ["\t", "\n"]
+    space = ["\t", "\n", " "]
+    complex_n = [ "e", "T"]
 
     for i in range(len(row)):
-        if(row[i] in space):
+        if(row[i] in space or row[i] in complex_n):
             continue
-        if(not (ord(row[i]) >= 48 and  ord(row[i]) <= 57)): # verfica se é um número
+        if(not (ord(row[i]) >= 48 and  ord(row[i]) <= 57 )): # verfica se é um número
             numeros = 0
         if(numeros == 0):
             return False
@@ -143,16 +143,38 @@ def getWellCount(path):
     header_data = header(path)
     return header_data.get("qtd_wells")
 
+def getWellNames(path):
+    file = read(path)
+    well_names = []
+    poco_nome = []
+    linha_anterior = ""
 
+    cont = 1
+    i = 0
+    aux = 0 #contador de aspas
+    #ola eu sou incrivel
 
+    for linha in file:
+        if linha[0] != '*' and not empty(linha):
+            if cont >= 8 and onlyNumbers(linha_anterior):# até chegar no nome do poço obrigatoriamente ele andou 8 ou mais linhas e verifica se a linha anterior é um número ou não
+                    if linha[0] == "'": # se a linha em questão começar com ' é pq ela é um nome de poço
+                        while aux < 2: # verifica se já vimos todo o nome do poço dentro das aspas
+                            poco_nome.append(linha[i])                                                 
+                            if linha[i] == "'":   
+                                aux += 1                          
+                            i+=1
+                        new = "".join(poco_nome) # transforma uma lista de strings separadas em uma onde elas ficam juntas
+                        poco_nome = [] 
+                        well_names.append(new)
+                        aux = 0
+                        i = 0
+            linha_anterior = linha.rstrip('\n')
+            cont += 1
 
-#print(getTitle("arquivos/_first.fhf"))
+    return well_names
 
-#print(header("arquivos/_includingsector.fhf"))
-#print(getPropNames("arquivos/_includingsector.fhf"))
-
-#print(getPropNames("arquivos/_includingsector.fhf"))
-
-#print(getDateHistory("arquivos/_first.fhf"))
-#file = read("arquivos\_includingsector.fhf")
+print(getWellNames('arquivos/_includingsector.fhf'))
+print(getWellCount("arquivos/_includingsector.fhf"))
+print(getWellPropNames("arquivos/_includingsector.fhf"))
+print(getWellPropCount("arquivos/_includingsector.fhf"))
 
