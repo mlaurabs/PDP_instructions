@@ -1,4 +1,3 @@
-#Métodos para leitura do FHF
 
 def read(path):
     file = open(path, "r")
@@ -6,12 +5,15 @@ def read(path):
 
 def onlyNumbers(row): # verifica se uma string contém apenas números - bool
     numeros = -1
-    space = ["\t", "\n"]
+    space = ["\t", "\n", " "]
+    complex_n = [ "e", "T"]
 
     for i in range(len(row)):
-        if(row[i] in space):
+        if(row[i] in space or row[i] in complex_n):
             continue
-        if(not (ord(row[i]) >= 48 and  ord(row[i]) <= 57)): # verfica se é um número
+        
+        if(not (ord(row[i]) >= 48 and  ord(row[i]) <= 57 )): # verfica se é um número
+            #if(row[i] not in complex_n):
             numeros = 0
         if(numeros == 0):
             return False
@@ -35,72 +37,52 @@ def empty(row): #verifica se uma linha é vazia - bool
     else:
         return True
 
+def teste(path): # continuar
+    file = read(path)
+    aux = dict() # {data historico: 5}
+    cont = 1
+
+    for linha in file:
+        #print(logunits)
+        if(linha[0] != "*" and not empty(linha)):
+            if(len(aux) == 0):
+                aux["data_histo"] = cont
+            elif(len(aux) == 1):
+                aux["titulo"] = cont
+            elif(len(aux) == 2):
+                aux["tempo0"] = cont
+            elif(len(aux) == 3):
+                aux["unidade_tempo"] = cont
+            elif(len(aux) == 4):
+                aux["qtd_prop"] = cont
+            elif(len(aux) == 5):
+                aux["coluna"] = cont
+            cont +=1
+        else:
+            
+            cont += 1
+
+    print(aux)
+
 def getColumns(linha): # identifica e retorna o nome das colunas
     properties = []
-    header_data = 0 # conta as aspas
+    aux = 0 # conta as aspas
     col = ""
     space = [" ", "\t"]
-    row = linha + " "
-    for i in range(len(row)):
-        if(row[i] in space and row[i-1] not in space): #verifica se já passamos por uma coluna (estamos entre colunas, ou seja, em um "espaço")
-            if(header_data == 0 or header_data == 2): # se acabou de ler uma coluna com ou sem aspas
+    for i in range(len(linha)):
+        if(linha[i] in space and linha[i-1] not in space): #verifica se já passamos por uma coluna (estamos entre colunas, ou seja, em um "espaço")
+            if(aux == 0 or aux == 2): # se acabou de ler uma coluna com ou sem aspas
                 properties.append(col.strip())
                 col = ""
             else:
                 col += " "
-        elif(row[i] == "'"): # começa a ler uma coluna entre aspas
-            if(header_data == 2): # se leu a última aspa
-                header_data = 0
-            header_data +=1
+        elif(linha[i] == "'"): # começa a ler uma coluna entre aspas
+            if(aux == 2): # se leu a última aspa
+                aux = 0
+            aux +=1
         else:
             col += linha[i]
     return properties
-
-def header(path): # continuar
-    file = read(path)
-    header_data = dict() # {data historico: 5, ...}
-    cont = 1 # iterador das linhas
-    tam = 0 # tam da lista de colunas 
-    aux = False # variavel auxiliar
-    propies = 0 # quantidade de colunas 
-
-    for linha in file:
-        linha = linha.rstrip()
-        if(not empty(linha)):
-            if(linha[0] != "*"): # se a linha não começar com "*" e não for vazia
-                # caso colatado, através da ordem pré-determinada, sabemos qual o próximo dado lido
-                if(aux): # se as propriedades continuam em outra linha
-                    tam += len(getColumns(linha)) 
-                    if(tam == propies): # terminou de ler as propriedades
-                        aux = False
-                    cont +=1
-                else:
-                    if(len(header_data) == 0):
-                        header_data["data_histo"] = cont
-                    elif(len(header_data) == 1):
-                        header_data["titulo"] = cont
-                    elif(len(header_data) == 2):
-                        header_data["tempo0"] = cont
-                    elif(len(header_data) == 3):
-                        header_data["unidade_tempo"] = cont
-                    elif(len(header_data) == 4):
-                        header_data["qtd_prop"] = cont
-                        propies = int(linha)
-                    elif(len(header_data) == 5):
-                        header_data["coluna"] = cont
-                        tam += len(getColumns(linha))
-                        if(tam != propies): # caso as propriedades não estejam todas na mesma linha
-                            aux = True
-                    elif(len(header_data) == 6):
-                        header_data["logunits"] = cont
-                    elif(len(header_data) == 7):
-                        header_data["qtd_wells"] = cont
-                        break   
-                    cont +=1
-        else:
-            cont += 1
-
-    return header_data
 
 def move(a, b):
     for item in a:
@@ -109,15 +91,16 @@ def move(a, b):
 
 def getPropNames(path):
     file = read(path)
-    header_data = header(path)
-    row_col = header_data['coluna']
-    row_qtd_col = header_data["qtd_prop"]
+    aux = teste(path)
+    row_col = aux['coluna']
+    row_qtd_col = aux["qtd_prop"]
     i = 1
     plus = False
     properties = []
     qtd_props = 0
 
     for linha in file:
+        linha = linha + " "
         if(plus):
             properties = move(getColumns(linha), properties)
             if(len(properties) == qtd_props):
@@ -131,10 +114,11 @@ def getPropNames(path):
             else:
                 plus = True
         i +=1
+    
     return properties
 
 
-def getDateHistory(path): # alterar
+def getDateHistory(path):
     file = read(path)
     linha = file.readline().rstrip()
     date = ""
@@ -148,7 +132,7 @@ def getDateHistory(path): # alterar
             #continue
     return date      
 
-def getTitle(path): # alterar
+def getTitle(path):
     file = read(path)
     linha = file.readline().rstrip()
     title = ""
@@ -162,13 +146,36 @@ def getTitle(path): # alterar
             linha = file.readline().rstrip()
     return title      
 
+def getWellNames(path):
+    file = read(path)
+    well_names = []
+    poco_nome = []
+    linha_anterior = ""
 
-#print(getTitle("arquivos/_first.fhf"))
+    cont = 1
+    i = 0
+    aux = 0
+    #ola eu sou incrivel
 
-print(header("arquivos/_first.fhf"))
+    for linha in file:
+        if linha[0] != '*' and not empty(linha):
+            if cont >= 8 and onlyNumbers(linha_anterior):
+                if onlyNumbers(linha_anterior): # até chegar no nome do poço obrigatoriamente ele andou 8 ou mais linhas #verifica se a linha anterior é um número ou não
+                    if linha[0] == "'": # se a linha em questão começar com ' é pq ela é um nome de poço
+                        while aux < 2:
+                            poco_nome.append(linha[i])                                                 
+                            if linha[i] == "'":   
+                                aux += 1                           
+                            i+=1
+                        new = "".join(poco_nome)
+                        poco_nome = []
+                        well_names.append(new)
+                        aux = 0
+                        i = 0
+            linha_anterior = linha.rstrip('\n')
+            cont += 1
 
-#print(getPropNames("arquivos/_includingsector.fhf"))
+    return well_names
 
-#print(getDateHistory("arquivos/_first.fhf"))
-#file = read("arquivos\_includingsector.fhf")
+print(getWellNames('MODELO_ECLIPSE_PVCO_LRAT.FHF'))
 
