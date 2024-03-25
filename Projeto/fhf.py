@@ -154,21 +154,20 @@ def getWellNames(path):
 
     cont = 1
     i = 0
-    aux = 0
+    aux = 0 #contador de aspas
     #ola eu sou incrivel
 
     for linha in file:
         if linha[0] != '*' and not empty(linha):
-            if cont >= 8 and onlyNumbers(linha_anterior):
-                if onlyNumbers(linha_anterior): # até chegar no nome do poço obrigatoriamente ele andou 8 ou mais linhas #verifica se a linha anterior é um número ou não
+            if cont >= 8 and onlyNumbers(linha_anterior):# até chegar no nome do poço obrigatoriamente ele andou 8 ou mais linhas e verifica se a linha anterior é um número ou não
                     if linha[0] == "'": # se a linha em questão começar com ' é pq ela é um nome de poço
-                        while aux < 2:
+                        while aux < 2: # verifica se já vimos todo o nome do poço dentro das aspas
                             poco_nome.append(linha[i])                                                 
                             if linha[i] == "'":   
-                                aux += 1                           
+                                aux += 1                          
                             i+=1
-                        new = "".join(poco_nome)
-                        poco_nome = []
+                        new = "".join(poco_nome) # transforma uma lista de strings separadas em uma onde elas ficam juntas
+                        poco_nome = [] 
                         well_names.append(new)
                         aux = 0
                         i = 0
