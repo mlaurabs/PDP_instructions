@@ -12,6 +12,7 @@
       - ***Obs: quando o git é incializado em um diretório é criado um arquivo .git que é oculto, então quando não queremos mais utilizar o git em um folder, podemos simplesmente apagá-lo***
   - **rm -rf .git** (apaga o arquivo .git)
   - **git add .** (envia para "stage" todas as modificações feitas no repositório. arquivos "staged" --> pronto para envio)
+  - **git add nomedoarquivo ** (adiciona apenas o arquivo selecionado)
   - **git commit -m "message"** (esse comando vai criar um comit dos arquivos que estão marcados como staged)
   - **git  remote add <"conexão" do repositório> <link "http" do repositório>** (configura o acesso a um repositório no GitHub)
   - **git push <"conexão" do repositório> <nome-da-branch>**  (envia as atualizações)
