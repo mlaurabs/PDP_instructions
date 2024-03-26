@@ -172,8 +172,18 @@ def getWellNames(path):
 
     return well_names
 
-print(getWellNames('arquivos/_includingsector.fhf'))
-print(getWellCount("arquivos/_includingsector.fhf"))
-print(getWellPropNames("arquivos/_includingsector.fhf"))
-print(getWellPropCount("arquivos/_includingsector.fhf"))
+def getPropData(path):
+    colunas = getWellPropNames(path)
+    n_cols = getWellPropCount(path)
+    well_names = getWellNames(path)
+    totalWells = getWellCount(path)
+    logunits = getLogunits(path)
+    file = read(path)
+    i = 0 #contador de poços
+    
 
+print(getWellNames('pdp/UNISIM-I-H_Group-1-PRO.fhf'))
+print(getWellCount("pdp/UNISIM-I-H_Group-1-PRO.fhf"))
+print(getWellPropNames("pdp/UNISIM-I-H_Group-1-PRO.fhf"))
+print(getWellPropCount("pdp/UNISIM-I-H_Group-1-PRO.fhf"))
+print(getLogunits("pdp/UNISIM-I-H_Group-1-PRO.fhf"))
