@@ -173,8 +173,8 @@ def getWellNames(path):
 
     return well_names
 
-print(getWellNames('arquivos/_includingsector.fhf'))
-print(getWellCount("arquivos/_includingsector.fhf"))
-print(getWellPropNames("arquivos/_includingsector.fhf"))
-print(getWellPropCount("arquivos/_includingsector.fhf"))
+#print(getWellNames('arquivos/_includingsector.fhf'))
+#print(getWellCount("arquivos/_includingsector.fhf"))
+#print(getWellPropNames("arquivos/_includingsector.fhf"))
+#print(getWellPropCount("arquivos/_includingsector.fhf"))
 
