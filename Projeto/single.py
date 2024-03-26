@@ -98,7 +98,9 @@ def getWellPropData(path): # retorna um dataframe dos dados do poço
             dados.append(linha.split())
 
     prop_data = dict()
-    prop_data[well_name] = pd.DataFrame(organizeData(dados, colunas, n_cols))
+    table = pd.DataFrame(organizeData(dados, colunas, n_cols))
+    table = table = table.to_string(index=False)
+    prop_data[well_name] = table
 
     return prop_data[well_name]
 
@@ -106,7 +108,7 @@ def getWellPropData(path): # retorna um dataframe dos dados do poço
 
 # print(getWellName("arquivos/2_singlewelllogwithnullvalue.log"))
 # getWellPropData("arquivos/2_singlewelllogwithnullvalue.log")
-print(getPropNames("arquivos/2_singlewelllogwithnullvalue.log"))
+print(getWellPropData("arquivos/2_singlewelllogwithnullvalue.log"))
 
 """
 funções não sendo utilizadas:
