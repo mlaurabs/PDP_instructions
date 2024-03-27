@@ -2,6 +2,7 @@
 # linhas que começam "*" são comentários
 import pandas as pd
 
+
 def read(path):
     file = open(path, "r")
     return file
@@ -38,7 +39,7 @@ def empty(row): #verifica se uma linha é vazia - bool
         return True
 
 def getColumns(linha): # identifica e retorna o nome das colunas
-    properties = []
+    columns = []
     aspas = 0 # conta as aspas
     col = ""
     space = [" ", "\t"]
@@ -46,7 +47,7 @@ def getColumns(linha): # identifica e retorna o nome das colunas
     for i in range(len(row)):
         if(row[i] in space and row[i-1] not in space): #verifica se já passamos por uma coluna (estamos entre colunas, ou seja, em um "espaço")
             if(aspas == 0 or aspas == 2): # se acabou de ler uma coluna com ou sem aspas
-                properties.append(col.strip())
+                columns.append(col.strip())
                 col = ""
             else:
                 col += " "
@@ -56,7 +57,7 @@ def getColumns(linha): # identifica e retorna o nome das colunas
             aspas +=1
         else:
             col += linha[i]
-    return properties
+    return columns
 
 def header(path): # retorna um dicionário onde cada key é o nome de um dado do cabeçalho e o seu value é o valor correspondente - dicionário
     file = read(path)
@@ -194,7 +195,6 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
     colunas = getWellPropNames(path)
     n_cols = getWellPropCount(path)
     well_names = getWellNames(path)
-    print(well_names)
     totalWells = getWellCount(path)
     file = read(path)
     i = 0 # contador de poços
@@ -212,11 +212,13 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
                 data_per_well[well] = dados
                 dados = []
                 well = well_names[i]
-                if(i < totalWells-1): # se ainda falta poço para ler
+                if(totalWells > 1 and i < totalWells-1):
+                    # se ainda falta poço para ler
                     i += 1        
             else: # iniciando leitura do primeiro poco
                 well = well_names[i]
-                i += 1
+                if(totalWells > 1):
+                    i += 1
         elif(leitura): # se ainda falta poço para ler
             if(not empty(linha) and onlyNumbers(linha)): # verificando se estamos na linha que contém dados
                 dados.append(linha.split())
@@ -229,15 +231,11 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
     
     for i in range(totalWells): # criando os dataframes
         key = well_names[i]
-        print("\n")
-        print(f"{key}")
         table = pd.DataFrame(data_per_well.get(key))
         table = table.to_string(index=False)
-        print(table)
         wellPropData.append(table)
 
     return wellPropData
     
 
-getWellPropData('arquivos/UNISIM-I-H_Well-PRO - Copy.fhf')
-
+getWellPropData('arquivosfhf/fhf/teste_7.format1.fhf')

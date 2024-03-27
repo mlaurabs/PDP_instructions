@@ -1,12 +1,10 @@
 #Métodos para leitura do Single Welllog
 import pandas as pd
+import loader as l
 
 # logunits deve ser incluído no DateFrame?
 # o wellcount e wellnames é necessário? pq o single contém apenas 1 poço por arquivo
 
-def read(path):
-    file = open(path, "r")
-    return file
 
 def onlyNumbers(row): # verifica se uma string contém apenas números - bool
     numeros = -1
@@ -22,24 +20,8 @@ def onlyNumbers(row): # verifica se uma string contém apenas números - bool
         else:
             return True
 
-# utlizar isalpha() isnumeric()
-def empty(row): # verifica se uma linha está vazia - bool
-    letras = -1
-    numeros = -1
-    for i in range(len(row)):
-        if(ord(row[i]) >= 48 and  ord(row[i]) <= 57): # verfica se é um número
-            numeros = 0
-        if(ord(row[i]) >= 65 and  ord(row[i]) <= 90): # verfica se é uma letra
-            letras = 0
-        elif(ord(row[i]) >= 97 and  ord(row[i]) <= 122):
-            letras = 0
-    if(letras == 0 or numeros == 0):
-        return False
-    else:
-        return True
-
-def getPropNames(path): # retirna o nome das propriedades - array
-    file = read(path)
+def getWellPropNames(path): # retirna o nome das propriedades - array
+    file = l.read(path)
     cont = 1 # contador de linhas
     logunits = -1 # variavel auxiliar para identificar se já a leitura dos dados dos poços já se inciou
     unidades = "logunits"
@@ -47,13 +29,13 @@ def getPropNames(path): # retirna o nome das propriedades - array
 
     for linha in file:
         linha = linha.rstrip() + " " #tira o \n e adiciona um espaço ao final
-        if(cont == 2 and not empty(linha)):
+        if(cont == 2 and not l.empty(linha)):
             row = linha.lower()
             if(unidades not in row): # verifica se a linha 2 é logunits (opcional nos documentos)
                 propNames = linha.split()
                 break
         elif(cont > 2):
-            if(not empty(linha)):
+            if(not l.empty(linha)):
                 propNames = linha.split()
                 break
         cont +=1
@@ -61,11 +43,11 @@ def getPropNames(path): # retirna o nome das propriedades - array
     return propNames
 
 def getWellPropCount(path): # retorna a quantidade de propriedades - int
-    propNames = getPropNames(path)
+    propNames = getWellPropNames(path)
     return len(propNames)
 
 def getWellName(path): # retorna o nome do poço
-    file = read(path)
+    file = l.read(path)
     linha = file.readline().rstrip() # tira o "\n"
     dados = linha.split() 
     return dados[0]
@@ -86,15 +68,15 @@ def organizeData(lista, colunas, n_cols): # organiza os dados de acordo com as p
     return data
 
 def getWellPropData(path): # retorna um dataframe dos dados do poço
-    file = read(path)
-    colunas = getPropNames(path)
+    file = l.read(path)
+    colunas = getWellPropNames(path)
     n_cols = getWellPropCount(path)
     well_name = getWellName(path)
     dados = []
 
     for linha in file:
         linha = linha.rstrip() # tira o "\n"
-        if(not empty(linha) and onlyNumbers(linha)):
+        if(not l.empty(linha) and onlyNumbers(linha)):
             dados.append(linha.split())
 
     prop_data = dict()
