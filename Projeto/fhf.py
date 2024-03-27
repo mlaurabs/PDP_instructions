@@ -206,17 +206,21 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
 
     for linha in file:
         linha = linha.rstrip()
+        print(well_names)
+        print(i)
         if(well_names[i] in linha): # caso esteja lendo a linha do poço
             leitura = True
             if(i > 0): # se o primeiro poço já inciou a leitura
                 data_per_well[well] = dados
                 dados = []
                 well = well_names[i]
-                if(i < totalWells-1): # se ainda falta poço para ler
+                if(totalWells > 1 and i < totalWells-1):
+                    # se ainda falta poço para ler
                     i += 1        
             else: # iniciando leitura do primeiro poco
                 well = well_names[i]
-                i += 1
+                if(totalWells > 1):
+                    i += 1
         elif(leitura): # se ainda falta poço para ler
             if(not empty(linha) and onlyNumbers(linha)): # verificando se estamos na linha que contém dados
                 dados.append(linha.split())
@@ -239,4 +243,4 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
     return wellPropData
     
 
-getWellPropData('arquivos/UNISIM-I-H_Well-PRO - Copy.fhf')
+getWellPropData('arquivosfhf/fhf/teste_7.format1.fhf')
