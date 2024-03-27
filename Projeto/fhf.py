@@ -1,6 +1,8 @@
 #Métodos para leitura do FHF
 # linhas que começam "*" são comentários
 
+import pandas as pd
+
 def read(path):
     file = open(path, "r")
     return file
@@ -172,18 +174,62 @@ def getWellNames(path):
 
     return well_names
 
-def getPropData(path):
+def organizeData(lista, colunas, n_cols): # organiza os dados de acordo com as propriedades do documento - dictionary
+    # lista são os dados de um determindado well
+    # colunas são as proriedades listadas no arquivo
+    # n_cols é o número de propriedades listadas no arquivo
+    data = dict()
+    j = 0
+    while(j < n_cols): 
+        key = colunas[j] # atribui a key do dicionario o nome da coluna/propriedade
+        valor = [] 
+        for item in lista: # percorre a lista onde cada item é uma linha
+            valor.append(item[j]) #pega o valor da linha na posiçao respectiva a coluna
+            data[key] = valor # atribui os dados organizados a sua respectiva coluna (key)
+        j +=1
+    return data
+
+def getWellPropData(path): # retorna uma lista com os dataframes dos poços - array
     colunas = getWellPropNames(path)
     n_cols = getWellPropCount(path)
     well_names = getWellNames(path)
     totalWells = getWellCount(path)
-    logunits = getLogunits(path)
     file = read(path)
-    i = 0 #contador de poços
-    
+    i = 0 # contador de poços
+    data_per_well = dict() # estrutura do dicionario: {nome do poço: [dados]}
+    well = ""
+    dados = [] # estrutura da lista: [[linha 0], [linha1], ..., [linha n]]
+    wellPropData = [] # estrutura da lista: [dataframe1, dataframe2, ..., dataframen]
 
-print(getWellNames('pdp/UNISIM-I-H_Group-1-PRO.fhf'))
-print(getWellCount("pdp/UNISIM-I-H_Group-1-PRO.fhf"))
-print(getWellPropNames("pdp/UNISIM-I-H_Group-1-PRO.fhf"))
-print(getWellPropCount("pdp/UNISIM-I-H_Group-1-PRO.fhf"))
-print(getLogunits("pdp/UNISIM-I-H_Group-1-PRO.fhf"))
+    for linha in file:
+        linha = linha.rstrip()
+        if(well_names[i] in linha): # caso esteja lendo a linha do poço
+            if(i > 0): # se o primeiro poço já inciou a leitura
+                data_per_well[well] = dados
+                dados = []
+                well = well_names[i]
+                if(i < totalWells-1): # se ainda falta poço para ler
+                    i += 1        
+            else: # iniciando leitura do primeiro poco
+                well = well_names[i]
+                i += 1
+        elif(i <= totalWells): # se ainda falta poço para ler
+            if(not empty(linha) and onlyNumbers(linha)): # verificando se estamos na linha que contém dados
+                dados.append(linha.split())
+        if(i == totalWells - 1): # se estamos na última linha de dados do último poço
+            data_per_well[well] = dados
+  
+    for key in data_per_well: # reorganiza os dados de cada well de acordo com suas propriedades
+        dados = data_per_well.get(key)
+        data_per_well[key] = organizeData(dados, colunas, n_cols)
+
+    for i in range(totalWells): # criando os dataframes
+        key = well_names[i]
+        table = pd.DataFrame(data_per_well.get(key))
+        wellPropData.append(table)
+
+    return wellPropData
+
+
+print(getWellPropData('arquivosfhf/fhf/_first.fhf'))
+
