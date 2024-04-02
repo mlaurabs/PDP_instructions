@@ -1,14 +1,10 @@
 import lasio
 import pandas as pd
 
-def read(path):
-    file = open(path, 'r')
-    return file
-
-def getWellpropdata(path):
+def getWellpropdata(path): # entender porque o valor é atribuído arredondado
     file = lasio.read(path)
     d = dict()
-    for i, curve in enumerate(file.curves):
+    for curve in file.curves:
         key = curve.mnemonic
         d[key] = file[curve.mnemonic]
     dt = pd.DataFrame(d)
@@ -25,20 +21,21 @@ def getWellNames(path):
     well_name = well_info['WELL'].value
     return well_name
 
-def getPropCount(path):
+def getPropNames(path):
     las = lasio.read(path)
-    prop_name = []
+    properties = dict()
     curves = las.curves
-    mnemonics = [curve.mnemonic for curve in curves]
-    for mnemonic in mnemonics:
-        prop_name.append(mnemonic)
-    prop_count = len(prop_name)
+    for curve in curves:
+        properties[curve.mnemonic] = curve.descr
+    return properties
 
-    print(prop_count)
-    print(prop_name)
-
+def getWellPropCount(path):
+    propies = getPropNames(path)
+    return len(propies)
 
 #print(getWellpropdata('arquivoslas/P3.las'))
 #getWellNames('arquivoslas/_firstexample.las')
-getPropCount('arquivoslas/Export_Sigeo3.las')
+#getPropCount('arquivos/Export_Sigeo3.las')
+
+print(getWellpropdata("arquivos/P23.las"))
 
