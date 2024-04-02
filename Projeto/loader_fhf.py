@@ -1,11 +1,7 @@
 #Métodos para leitura do FHF
 # linhas que começam "*" são comentários
 import pandas as pd
-
-
-def read(path):
-    file = open(path, "r")
-    return file
+import loader as l
 
 def onlyNumbers(row): # verifica se uma string contém apenas números - bool
     numeros = -1
@@ -22,45 +18,8 @@ def onlyNumbers(row): # verifica se uma string contém apenas números - bool
         else:
             return True
 
-def empty(row): #verifica se uma linha é vazia - bool
-    # uma linha vazia na extensão .wlg é aquela que não contém letras ou números
-    letras = -1
-    numeros = -1
-    for i in range(len(row)):
-        if(ord(row[i]) >= 48 and  ord(row[i]) <= 57): # verfica se é um número
-            numeros = 0
-        if(ord(row[i]) >= 65 and  ord(row[i]) <= 90): # verfica se é uma letra maiúscula
-            letras = 0
-        elif(ord(row[i]) >= 97 and  ord(row[i]) <= 122): # verfica se é uma letra minúscula
-            letras = 0
-    if(letras == 0 or numeros == 0): # a linha não é vazia
-        return False
-    else:
-        return True
-
-def getColumns(linha): # identifica e retorna o nome das colunas
-    columns = []
-    aspas = 0 # conta as aspas
-    col = ""
-    space = [" ", "\t"]
-    row = linha + " "
-    for i in range(len(row)):
-        if(row[i] in space and row[i-1] not in space): #verifica se já passamos por uma coluna (estamos entre colunas, ou seja, em um "espaço")
-            if(aspas == 0 or aspas == 2): # se acabou de ler uma coluna com ou sem aspas
-                columns.append(col.strip())
-                col = ""
-            else:
-                col += " "
-        elif(row[i] == "'"): # começa a ler uma coluna entre aspas
-            if(aspas == 2): # se leu a última aspa
-                aspas = 0
-            aspas +=1
-        else:
-            col += linha[i]
-    return columns
-
 def header(path): # retorna um dicionário onde cada key é o nome de um dado do cabeçalho e o seu value é o valor correspondente - dicionário
-    file = read(path)
+    file = l.read(path)
     header_data = dict() # {data_historico: 1, ...}
     cont = 1 # contador das linhas
     tam = 0 # tam da lista de colunas 
@@ -69,11 +28,11 @@ def header(path): # retorna um dicionário onde cada key é o nome de um dado do
 
     for linha in file:
         linha = linha.rstrip()
-        if(not empty(linha)):
+        if(not l.empty(linha)):
             if(linha[0] != "*"): # se a linha não começar com "*" e não for vazia
                 
                 if(aux): # se as propriedades continuam em outra linha
-                    colunas = add_list_to_list(getColumns(linha), colunas) # concatena as propriedades lidas na linha anterior com as propriedades da linha atual
+                    colunas = add_list_to_list(l.getColumns(linha), colunas) # concatena as propriedades lidas na linha anterior com as propriedades da linha atual
                     header_data.update({"propriedades": colunas}) # atualiza as propriedades no dicionário
                     tam = len(colunas) 
                     if(tam == propies): # compara a quantidades de propriedades já lidas com o total de propriedades do arquivo
@@ -92,13 +51,13 @@ def header(path): # retorna um dicionário onde cada key é o nome de um dado do
                         propies = int(linha)
                         header_data["qtd_prop"] = propies
                     elif(len(header_data) == 5):
-                        colunas = getColumns(linha)
+                        colunas = l.getColumns(linha)
                         header_data["propriedades"] = colunas
                         tam = len(colunas)
                         if(tam != propies): # caso todas as propriedades não estejam todas na mesma linha
                             aux = True
                     elif(len(header_data) == 6):
-                        header_data["logunits"] = getColumns(linha)
+                        header_data["logunits"] = l.getColumns(linha)
                     elif(len(header_data) == 7):
                         header_data["qtd_wells"] = int(linha)
                         break   # terminou de ler o cabeçalho do arquivo
@@ -146,17 +105,16 @@ def getWellCount(path):
     return header_data.get("qtd_wells")
 
 def getWellNames(path):
-    file = read(path)
+    file = l.read(path)
     well_names = []
     poco_nome = []
     linha_anterior = ""
     cont = 1
     i = 0
     aux = 0 #contador de aspas
-    #ola eu sou incrivel
 
     for linha in file:
-        if linha[0] != '*' and not empty(linha):
+        if linha[0] != '*' and not l.empty(linha):
             if cont >= 8 and onlyNumbers(linha_anterior):# até chegar no nome do poço obrigatoriamente ele andou 8 ou mais linhas e verifica se a linha anterior é um número ou não
                     if linha[0] == "'": # se a linha em questão começar com ' é pq ela é um nome de poço
                         while aux < 2: # verifica se já vimos todo o nome do poço dentro das aspas
@@ -196,7 +154,7 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
     n_cols = getWellPropCount(path)
     well_names = getWellNames(path)
     totalWells = getWellCount(path)
-    file = read(path)
+    file = l.read(path)
     i = 0 # contador de poços
     data_per_well = dict() # estrutura do dicionario: {nome do poço: [dados]}
     well = ""
@@ -220,7 +178,7 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
                 if(totalWells > 1):
                     i += 1
         elif(leitura): # se ainda falta poço para ler
-            if(not empty(linha) and onlyNumbers(linha)): # verificando se estamos na linha que contém dados
+            if(not l.empty(linha) and onlyNumbers(linha)): # verificando se estamos na linha que contém dados
                 dados.append(linha.split())
         if(i == totalWells - 1): # se estamos na última linha de dados do último poço
             data_per_well[well] = dados
@@ -237,5 +195,3 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
 
     return wellPropData
     
-
-getWellPropData('arquivosfhf/fhf/teste_7.format1.fhf')

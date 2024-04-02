@@ -46,7 +46,7 @@ def getWellPropCount(path): # retorna a quantidade de propriedades - int
     propNames = getWellPropNames(path)
     return len(propNames)
 
-def getWellName(path): # retorna o nome do poço
+def getWellNames(path): # retorna o nome do poço
     file = l.read(path)
     linha = file.readline().rstrip() # tira o "\n"
     dados = linha.split() 
@@ -71,7 +71,7 @@ def getWellPropData(path): # retorna um dataframe dos dados do poço
     file = l.read(path)
     colunas = getWellPropNames(path)
     n_cols = getWellPropCount(path)
-    well_name = getWellName(path)
+    well_name = getWellNames(path)
     dados = []
 
     for linha in file:
@@ -81,16 +81,12 @@ def getWellPropData(path): # retorna um dataframe dos dados do poço
 
     prop_data = dict()
     table = pd.DataFrame(organizeData(dados, colunas, n_cols))
-    table = table = table.to_string(index=False)
+    table = table.to_string(index=False, )
     prop_data[well_name] = table
 
     return prop_data[well_name]
 
 # wellproptype - TO DO    
-
-# print(getWellName("arquivos/2_singlewelllogwithnullvalue.log"))
-# getWellPropData("arquivos/2_singlewelllogwithnullvalue.log")
-print(getWellPropData("arquivos/2_singlewelllogwithnullvalue.log"))
 
 """
 funções não sendo utilizadas:
