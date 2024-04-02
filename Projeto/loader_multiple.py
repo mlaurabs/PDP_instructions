@@ -169,16 +169,36 @@ def getWellPropData(path): # retorna uma lista com os dataframes dos poços - ar
   
     for key in data_per_well: # reorganiza os dados de cada well de acordo com suas propriedades
         dados = data_per_well.get(key)
+        print(dados)
         data_per_well[key] = organizeData(dados, colunas, n_cols)
+
 
     for i in range(totalWells): # criando os dataframes
         key = well_names[i]
         table = pd.DataFrame(data_per_well.get(key))
-        table = table.to_string(index=False)
         wellPropData.append(table)
 
     return wellPropData
 
+
+lista = getWellPropData("Projeto/arquivos/RFT_LINGUADO.wlg")
+
+file_csv = open("Projeto/dados_em_csv/teste.csv", "a")
+for item in lista:
+    new_item = item.dropna()
+    new_item.to_csv(file_csv, index=False)
+    file_csv.write("\n\n")
+
+'''def transformarEmCsv(path):
+    lista = getWellPropData(path)
+    file_name = l.getFileName(path)
+    for item in lista:
+        df = pd.DataFrame(item)
+        print(df)
+        df.to_csv(file_name + '.csv') 
+
+transformarEmCsv('Projeto/arquivos/multiplewelllogwith2d.wlg')
+'''
 # wellproptype - TO DO    
 
 """

@@ -38,6 +38,22 @@ def getColumns(linha): # identifica e retorna o nome das colunas
         else:
             col += linha[i]
     return columns
+
+def getFileName(path):
+    barra = '/'
+    aux = 0
+    file_name = ""
+    for letter in path:
+        if(aux == 0):
+            if(letter == barra):
+                aux +=1
+            else:
+                continue
+        elif(aux > 0):
+            file_name += letter
+    file_name = file_name[:-4]
+    return file_name
+
 """
 métodos que seriam sobrescitos dependendo do tipo de loader:
 onlyNumbers(row)
