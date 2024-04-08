@@ -27,7 +27,7 @@
   - **git branch --list** (lista as branches existentes)
   - **git branch -r** (lista os "remotes" e suas respectivas branches)
   -  **git clone <https>**
-  -  git clone --branch <nome_da_branch>
+  -  **git clone --branch <nome_da_branch>**
 - Ciclo de vida do git:
     - ![image](https://github.com/mlaurabs/PDP_instructions/assets/89169599/5e578c3c-01b0-403d-ac45-dbb73dde9079)
 
